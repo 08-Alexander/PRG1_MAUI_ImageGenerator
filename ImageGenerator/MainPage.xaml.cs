@@ -23,6 +23,8 @@ namespace ImageGenerator
         public MainPage()
         {
             InitializeComponent();
+
+            Debug.WriteLine("Buuu");
         }
 
         private void ImageOnClicked(object? sender, EventArgs e)

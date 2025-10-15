@@ -4,27 +4,39 @@ using System.Runtime.CompilerServices;
 
 namespace ImageGenerator
 {
+    public class Gallery
+    {
+        public string Picture { get; set; }
+        public string Description { get; set; }
+        public bool IsFavorite { get; set; }
+    }
+
+    
     public partial class MainPage : ContentPage
     {
-        static private bool _isFavorite;
+        Gallery _currentPicture;
 
-        private Dictionary<string, string> ImageList = new()
+        private List<Gallery> ImageList = new List<Gallery>()
             {
-                {"image1", "Man" },
-                {"image2", "Bird" },
-                {"image3", "Big cat" },
-                {"image4", "Autumn road" },
-                {"image5", "Flowergirl" }
+                new Gallery() { Picture = "image1", Description = "Man", IsFavorite = false },
+                new Gallery() { Picture = "image2", Description = "Bird", IsFavorite = false },
+                new Gallery() { Picture = "image3",Description = "Big cat", IsFavorite = false},
+                new Gallery(){ Picture = "image4", Description = "Autumn road", IsFavorite = false},
+                new Gallery(){ Picture = "image5", Description = "Flowergirl", IsFavorite = false},
+                new Gallery(){ Picture = "image6", Description = "En ko", IsFavorite = false},
+                new Gallery(){ Picture = "image7", Description = "En vacker stig med en vacker utsikt", IsFavorite =false},
+                new Gallery(){ Picture = "image8", Description = "Ett stort och fint slott", IsFavorite = false},
+                new Gallery(){ Picture = "image9", Description = "En liten pojke som gör sin läxa", IsFavorite =false},
+                new Gallery(){ Picture = "image10", Description = "Mmmm, god fika", IsFavorite =false},
             };
 
-
+        
         private Random random = new();
 
         public MainPage()
         {
             InitializeComponent();
-
-            Debug.WriteLine("Buuu");
+            int a = 23;
         }
 
         private void ImageOnClicked(object? sender, EventArgs e)
@@ -39,13 +51,13 @@ namespace ImageGenerator
 
             var pairs = ImageList.ElementAt(random.Next(ImageList.Count));
 
-            Debug.WriteLine(pairs.Key + ": " + pairs.Value); // för testning i Output
+            Debug.WriteLine(pairs.Picture + ": " + pairs.Description); // för testning i Output
 
-            string showKey = GetImageFileEnding(pairs.Key); // detta då enbart Windows kräver filändelse
+            string showKey = GetImageFileEnding(pairs.Picture); // detta då enbart Windows kräver filändelse
 
             ShowGallery.Source = showKey;
 
-            ImageText.Text = pairs.Value;
+            ImageText.Text = pairs.Description;
         }
 
         private string GetImageFileEnding(string imageKey)
@@ -60,9 +72,10 @@ namespace ImageGenerator
 
         private void OnFavoriteClicked(object sender, EventArgs e)
         {
-            _isFavorite = !_isFavorite;
 
-            if (_isFavorite)
+            _currentPicture.IsFavorite = !_currentPicture.IsFavorite;   
+
+            if (_currentPicture.IsFavorite)
             {
                 FavoriteButton.Source = new FontImageSource
                 {

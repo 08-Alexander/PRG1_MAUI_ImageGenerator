@@ -31,12 +31,12 @@ namespace ImageGenerator
             };
 
         
-        private Random random = new();
+        private Random random = new Random();
+
 
         public MainPage()
         {
             InitializeComponent();
-            int a = 23;
         }
 
         private void ImageOnClicked(object? sender, EventArgs e)
@@ -47,25 +47,26 @@ namespace ImageGenerator
         private void ShowImageAndText()
         {
 
-            //var singleKeys = ImageList.Keys.ToList(); // en lokal lista av det första paret i en Dictionary
+            _currentPicture = ImageList.ElementAt(random.Next(1, ImageList.Count));
 
-            var pairs = ImageList.ElementAt(random.Next(ImageList.Count));
+            Debug.WriteLine(_currentPicture.Picture + " " + _currentPicture.IsFavorite); // för testning i Output
 
-            Debug.WriteLine(pairs.Picture + ": " + pairs.Description); // för testning i Output
+            string singleImage = GetImageFileEnding(_currentPicture.Picture); // detta då enbart Windows kräver filändelse
 
-            string showKey = GetImageFileEnding(pairs.Picture); // detta då enbart Windows kräver filändelse
 
-            ShowGallery.Source = showKey;
 
-            ImageText.Text = pairs.Description;
+            ShowGallery.Source = singleImage;
+
+            ImageText.Text = _currentPicture.Description;
+
         }
 
-        private string GetImageFileEnding(string imageKey)
+        private string GetImageFileEnding(string imageURL)
         {
-            #if WINDOWS
-            return imageKey + ".jpg";
-            #else
-            return imageKey;
+#if WINDOWS
+            return imageURL + ".jpg";
+#else
+            return imageURL;
             #endif
         }
 
@@ -73,7 +74,12 @@ namespace ImageGenerator
         private void OnFavoriteClicked(object sender, EventArgs e)
         {
 
-            _currentPicture.IsFavorite = !_currentPicture.IsFavorite;   
+
+            if (_currentPicture == null) return;
+
+            _currentPicture.IsFavorite = !_currentPicture.IsFavorite;
+
+            Debug.WriteLine(_currentPicture.Picture + " " + _currentPicture.IsFavorite);
 
             if (_currentPicture.IsFavorite)
             {
@@ -96,11 +102,6 @@ namespace ImageGenerator
                 };
             }
         }
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-
-        //protected void OnPropertyChanged([CallerMemberName] string name = null)
-        //    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     }
 }
